@@ -22,6 +22,7 @@ def es_superusuario():
 def elevar_privilegios():
     if not es_superusuario():
         print("Intentando ejecutar como superusuario...")
+        print("Es importante seder los permisos de superusuario para poder acceder y monitorear los archivos del sistema.")
         os.execvp("sudo", ["sudo", "python3"] + sys.argv)
 
 def calcular_hash(archivo):
