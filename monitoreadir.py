@@ -69,7 +69,7 @@ def monitorear_archivos(archivos, destinatario):
                     hashes_iniciales[archivo] = hash_actual
                 elif not hash_actual:
                     print(f"Advertencia: No se pudo acceder al archivo {archivo}.")
-            time.sleep(3)
+            time.sleep(60)
     finally:
         server.quit()
 
