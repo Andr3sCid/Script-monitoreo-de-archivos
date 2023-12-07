@@ -5,6 +5,7 @@ from email.message import EmailMessage
 import os
 import sys
 import re
+import signal
 
 # Configuración global
 ARCHIVOS = [
@@ -70,16 +71,22 @@ def monitorear_archivos(archivos, destinatario):
                     hashes_iniciales[archivo] = hash_actual
                 elif not hash_actual:
                     print(f"Advertencia: No se pudo acceder al archivo {archivo}.")
-            time.sleep(60)
-    finally:
+            time.sleep(3)
+    except SystemExit:
         server.quit()
+        print("Monitoreo finalizado.")
 
 def es_correo_valido(correo):
     patron = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(patron, correo) is not None
 
+def manejar_interrupcion(signum, frame):
+    print("\nInterrupción detectada, finalizando el monitoreo...")
+    raise SystemExit
+
 def main():
     elevar_privilegios()
+    signal.signal(signal.SIGINT, manejar_interrupcion)
     correo_destinatario = input("Ingrese el correo electrónico al que desea enviar la alerta: ")
     if es_correo_valido(correo_destinatario):
         monitorear_archivos(ARCHIVOS, correo_destinatario)
